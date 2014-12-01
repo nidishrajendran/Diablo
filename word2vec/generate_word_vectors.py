@@ -31,7 +31,6 @@ model = gensim.models.Word2Vec(sentences, min_count=1)
 
 data = {}
 data['We2'] = model.syn0.T
-
 w = np.array(model.index2word, dtype='object')
 data['words'] = w.reshape((1,w.shape[0]))
 data['reIndexMap'] = np.empty((model.syn0.shape[0],1))
