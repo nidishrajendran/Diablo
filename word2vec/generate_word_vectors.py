@@ -2,8 +2,8 @@ import gensim, logging
 import scipy.io
 import numpy as np
 
-filename = "train.data"
-outfile = './word2vec/sentences.data'
+filename = "../train.data"
+outfile = 'sentences.data'
 
 with open(filename, 'r') as train_file:
     with open(outfile, 'w') as out_file:
@@ -17,7 +17,7 @@ with open(filename, 'r') as train_file:
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-def read_sentences(filename='./word2vec/sentences.data'):
+def read_sentences(filename='sentences.data'):
     sentences = []
     with open(filename, 'r') as sentences_file:
         for line in sentences_file:
@@ -32,8 +32,8 @@ model = gensim.models.Word2Vec(sentences, min_count=1)
 data = {}
 data['We2'] = model.syn0.T
 
-data['words'] = np.array(model.index2word, dtype='object')
-
+w = np.array(model.index2word, dtype='object')
+data['words'] = w.reshape((1,w.shape[0]))
 data['reIndexMap'] = np.empty((model.syn0.shape[0],1))
 
 
