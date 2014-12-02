@@ -30,16 +30,21 @@ sentences = read_sentences()
 model = gensim.models.Word2Vec(sentences, min_count=1)
 
 data = {}
-data['We2'] = model.syn0.T
-w = np.array(model.index2word, dtype='object')
-data['words'] = w.reshape((1,w.shape[0]))
-data['reIndexMap'] = np.empty((model.syn0.shape[0],1))
 
+word_embeddings = model.syn0.copy()
+unknown = np.mean(word_embeddings, axis=0)
+word_embeddings = np.vstack((unknown[np.newaxis,:], word_embeddings))
+data['We2'] = word_embeddings.T
+
+words = model.index2word[:]
+words = ['*UNKNOWN*'] + words
+w = np.array(words, dtype='object')
+data['words'] = w.reshape((1,w.shape[0]))
+
+data['reIndexMap'] = np.empty((word_embeddings.shape[0],1))
 
 print data['We2'].shape
 print data['words'].shape
 print data['reIndexMap'].shape
 
-print data['words']
-
-scipy.io.savemat('word-embeddings.mat', data)
+scipy.io.savemat('../data/word-embeddings.mat', data)
