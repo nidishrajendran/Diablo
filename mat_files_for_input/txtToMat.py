@@ -19,5 +19,5 @@ trainSetSize = int(0.7*len(labels))
 trainingLabels = np.array(labels[:trainSetSize],dtype=float).T
 testingLabels = np.array(labels[trainSetSize:],dtype=float).T
 
-scipy.io.savemat('twitter_all.mat', mdict={'trainingLabels': trainingLabels,'testingLabels':testingLabels,'sentences':my_list})
+scipy.io.savemat('twitter_all.mat', mdict={'training_labels': trainingLabels,'testing _labels':testingLabels,'sentences':my_list})
 
