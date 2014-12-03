@@ -52,9 +52,11 @@ print type(data['We2'])
 outDict = {}
 
 for word,val in zip(data['words'][0],data['We2']):
-    print word,val
     outDict[word] = val
 
 pickle.dump(outDict,open('word-embeddings.pickle','wb'))
+
+# temp = pickle.load(open('word-embeddings.pickle','rb'))
+# print temp.keys()
 
 scipy.io.savemat('../data/word-embeddings.mat', data)
