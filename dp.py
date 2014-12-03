@@ -5,10 +5,19 @@ def doDynamicPooling(sim_matrix,x):
     m = sim_matrix.shape[0]
     n = sim_matrix.shape[1]
 
-    if x > m or x > n:
-        print "Incorrect Input"
-        return -1
+    if x > m:
+        extra = sim_matrix[np.random.choice(range(m),size=x-m,replace=True),:]
+        #print extra.shape
+        sim_matrix = np.vstack((sim_matrix,extra))
+        m = x
+        #print sim_matrix.shape
 
+    if x > n:
+        extra = sim_matrix[:,np.random.choice(range(n),size=x-n,replace=True)]
+        #print extra.shape
+        sim_matrix = np.hstack((sim_matrix,extra))
+        n = x
+        #print sim_matrix.shape
 
     #x = 5
     grids = [[None]*x for i in xrange(x)]
@@ -23,7 +32,7 @@ def doDynamicPooling(sim_matrix,x):
 
     for i in xrange(rounded_rows, rounded_rows + n_extra_rows):
         for j in xrange(x):
-            print x - n_extra_rows + i - rounded_rows, j
+            #print x - n_extra_rows + i - rounded_rows, j
             grids[x - n_extra_rows + i - rounded_rows][j].append(sim_matrix[i, j*int(n/x):(j+1)*int(n/x)])
 
     # Add extra columns
@@ -52,5 +61,5 @@ def get_min(matrix_list):
 
 
 
-#sim_matrix = np.random.randint(100, size=(23,12))
-#doDynamicPooling(sim_matrix,15)
+# sim_matrix = np.random.randint(100, size=(23,12))
+# print doDynamicPooling(sim_matrix,25)
