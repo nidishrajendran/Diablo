@@ -54,7 +54,8 @@ outDict = {}
 for word,val in zip(data['words'][0],data['We2'].T.tolist()):
     outDict[word] = val
 
-pickle.dump(outDict,open('word-embeddings.pickle','wb'))
+print "\nDumped to data/word-embeddings.pickle"
+pickle.dump(outDict,open('../data/word-embeddings.pickle','wb'))
 
 # temp = pickle.load(open('word-embeddings.pickle','rb'))
 # print temp.keys()

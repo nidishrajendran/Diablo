@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 from scipy import spatial
+from dp import doDynamicPooling
 
 def getEmbeddings(line):
 	result = []
@@ -12,16 +13,18 @@ def getEmbeddings(line):
 		result.append(e)
 	return result
 
-# Start
+# Start - Generates pickle file with tuples of Similarity Matrix, label
 word2vecDict = pickle.load(open("data/word-embeddings.pickle", "rb" ))
+labels = np.loadtxt("data/labels.txt")
 tokenized_lines = []
 
-with open('data/sentences.data', 'r') as corpus:
+with open('data/sentences.txt', 'r') as corpus:
     for line in corpus:
         tokenized_lines.append(line.strip().split())
 
 # List of similarity matrices for each pair of sentences in the corpus
 simMats = []
+count = 0
 for i in xrange(0, len(tokenized_lines), 2):
 	if i%1000==0:
 		print "Sentences processed -", i
@@ -35,9 +38,14 @@ for i in xrange(0, len(tokenized_lines), 2):
 	We2 = getEmbeddings(s2)
 
 	simMat = np.zeros((len(We1), len(We2)))
-	for i in xrange(len(We1)):
-		for j in xrange(len(We2)):
-			simMat[i,j] = spatial.distance.euclidean( We1[i], We2[j] )
-	simMats.append(simMat)
+	for j in xrange(len(We1)):
+		for k in xrange(len(We2)):
+			simMat[j,k] = spatial.distance.euclidean( We1[j], We2[k] )
+	
+	simMat = doDynamicPooling(simMat, 10)
+	label = labels[i/2]
 
+	simMats.append((simMat, label))
+
+print len(simMats)
 pickle.dump(simMats,open("data/simMats.pickle",'wb'))
