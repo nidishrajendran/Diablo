@@ -5,8 +5,12 @@ def doDynamicPooling(sim_matrix,x):
     m = sim_matrix.shape[0]
     n = sim_matrix.shape[1]
 
+    if x > m or x > n:
+        print "Incorrect Input"
+        return -1
 
-    x = 15
+
+    #x = 5
     grids = [[None]*x for i in xrange(x)]
 
     for i in xrange(x):
@@ -37,7 +41,7 @@ def doDynamicPooling(sim_matrix,x):
         for j in xrange(x):
             dp_sim_matrix[i,j] = get_min(grids[i][j])
 
-    print dp_sim_matrix
+    return dp_sim_matrix
 
 def get_min(matrix_list):
     min = float('inf')
