@@ -18,28 +18,27 @@ def getEmbeddings(line):
 	return result
 
 def computeDict():
-	f = open("data/wikiVectors.pkl", "rb")
-	raw = cPickle.load(f)
-	f.close()
-	words = raw[0]
-	vecs = raw[1]
-	averageWe = np.sum(vecs, axis=0)/float(vecs.shape[0])
+	with open("data/wikiVectors.pkl", "r") as f:
+		raw = cPickle.load(f)
+	words, vecs = raw
+
 	dic = {}
 	for i in xrange(len(words)):
 		dic[words[i]] = vecs[i,:]
-	return dic, averageWe
+
+	return dic, np.sum(vecs, axis=0)/float(vecs.shape[0])
 
 
 # Start - Generates pickle file with tuples of Similarity Matrix, label
 if wikiVectors==1:
 	word2vecDict, averageWe = computeDict()
 else:
-	word2vecDict = pickle.load(open("data/word-embeddings.pickle", "rb" ))
+	word2vecDict, averageWe = pickle.load(open("data/word-embeddings.pickle", "rb" )), None
 
 labels = np.loadtxt("data/labels.txt")
 tokenized_lines = []
 
-with open('data/sentences.txt', 'r') as corpus:
+with open("data/sentences.txt", "r") as corpus:
     for line in corpus:
         tokenized_lines.append(line.strip().split())
 
