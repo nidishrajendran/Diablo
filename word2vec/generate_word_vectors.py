@@ -1,6 +1,7 @@
 import gensim, logging
 import scipy.io
 import numpy as np
+import pickle
 
 filename = "../train.data"
 outfile = 'sentences.data'
@@ -46,5 +47,14 @@ data['reIndexMap'] = np.empty((word_embeddings.shape[0],1))
 print data['We2'].shape
 print data['words'].shape
 print data['reIndexMap'].shape
+
+print type(data['We2'])
+outDict = {}
+
+for word,val in zip(data['words'][0],data['We2']):
+    print word,val
+    outDict[word] = val
+
+pickle.dump(outDict,open('word-embeddings.pickle','wb'))
 
 scipy.io.savemat('../data/word-embeddings.mat', data)
