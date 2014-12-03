@@ -5,3 +5,4 @@ cd word2vec
 python generate_word_vectors.py
 cd ..
 python simMat.py
+python classifyTweets.py
