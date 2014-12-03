@@ -1,20 +1,41 @@
 import os
 import pickle
+import cPickle
 import numpy as np
 from scipy import spatial
 from dp import doDynamicPooling
 
+wikiVectors = 1
+
 def getEmbeddings(line):
 	result = []
 	for word in line:
-		e = word2vecDict[word]
-		if len(e)!=100:
-			print "\nLocha!"
+		if word in word2vecDict:
+			e = word2vecDict[word]
+		else:
+			e = averageWe
 		result.append(e)
 	return result
 
+def computeDict():
+	f = open("data/wikiVectors.pkl", "rb")
+	raw = cPickle.load(f)
+	f.close()
+	words = raw[0]
+	vecs = raw[1]
+	averageWe = np.sum(vecs, axis=0)/float(vecs.shape[0])
+	dic = {}
+	for i in xrange(len(words)):
+		dic[words[i]] = vecs[i,:]
+	return dic, averageWe
+
+
 # Start - Generates pickle file with tuples of Similarity Matrix, label
-word2vecDict = pickle.load(open("data/word-embeddings.pickle", "rb" ))
+if wikiVectors==1:
+	word2vecDict, averageWe = computeDict()
+else:
+	word2vecDict = pickle.load(open("data/word-embeddings.pickle", "rb" ))
+
 labels = np.loadtxt("data/labels.txt")
 tokenized_lines = []
 
@@ -48,4 +69,4 @@ for i in xrange(0, len(tokenized_lines), 2):
 	simMats.append((simMat, label))
 
 print len(simMats)
-pickle.dump(simMats,open("data/simMats.pickle",'wb'))
+pickle.dump(simMats,open("data/simMats" + str(i+1) + ".pickle",'wb'))
