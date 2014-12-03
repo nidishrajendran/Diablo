@@ -51,7 +51,7 @@ print data['reIndexMap'].shape
 print type(data['We2'])
 outDict = {}
 
-for word,val in zip(data['words'][0],data['We2']):
+for word,val in zip(data['words'][0],data['We2'].T.tolist()):
     outDict[word] = val
 
 pickle.dump(outDict,open('word-embeddings.pickle','wb'))
