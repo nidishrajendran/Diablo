@@ -4,18 +4,29 @@ import cPickle
 import numpy as np
 from scipy import spatial
 from dp import doDynamicPooling
+from nltk.util import ngrams
 
 wikiVectors = 1
+ngms = 2
 
-def getEmbeddings(line):
+
+def getKEmbeddings(line,ngms):
+	global averageWe
+	while len(line) < ngms:
+		line += line[-1]
+	grams = ngrams(line,ngms)
 	result = []
-	for word in line:
-		if word in word2vecDict:
-			e = word2vecDict[word]
-		else:
-			e = averageWe
+	for gram in grams:
+		e  = []
+		for word in gram:
+			if word in word2vecDict:
+				e = np.hstack((e,word2vecDict[word]))
+			else:
+				e = np.hstack((e,averageWe))
+				
 		result.append(e)
 	return result
+
 
 def computeDict():
 	with open("data/wikiVectors.pkl", "r") as f:
@@ -54,18 +65,19 @@ for i in xrange(0, len(tokenized_lines), 2):
 	s2 = tokenized_lines[i+1]
 
 	# Get a list of word embeddings for every word in the sentences
-	We1 = getEmbeddings(s1)
-	We2 = getEmbeddings(s2)
+	We1 = getKEmbeddings(s1,ngms)
+	We2 = getKEmbeddings(s2,ngms)
 
 	simMat = np.zeros((len(We1), len(We2)))
 	for j in xrange(len(We1)):
 		for k in xrange(len(We2)):
 			simMat[j,k] = spatial.distance.euclidean( We1[j], We2[k] )
 	
-	simMat = doDynamicPooling(simMat, 10)
+	simMat = doDynamicPooling(simMat, 5)
 	label = labels[i/2]
 
 	simMats.append((simMat, label))
 
 print len(simMats)
-pickle.dump(simMats,open("data/simMats" + str(i+1) + ".pickle",'wb'))
+print len(labels[labels == 1])
+pickle.dump(simMats,open("data/vPoolData/NsimMats" + str(15) + ".pickle",'wb'))
