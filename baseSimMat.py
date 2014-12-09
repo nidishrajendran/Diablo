@@ -37,4 +37,5 @@ for i in xrange(0, len(tokenized_lines), 2):
 	simMats.append((simMat, label))
 
 print len(simMats)
-pickle.dump(simMats,open("data/LRsimMats1.pickle",'wb'))
+pickle.dump(simMats,open("data/simMats15.pickle",'wb'))
+pickle.dump(tokenized_lines,open("data/tokenized_lines"+str(15)+".pickle",'wb'))

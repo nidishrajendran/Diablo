@@ -56,6 +56,7 @@ with open("data/sentences.txt", "r") as corpus:
 # List of similarity matrices for each pair of sentences in the corpus
 simMats = []
 count = 0
+
 for i in xrange(0, len(tokenized_lines), 2):
 	if i%1000==0:
 		print "Sentences processed -", i
@@ -73,11 +74,11 @@ for i in xrange(0, len(tokenized_lines), 2):
 		for k in xrange(len(We2)):
 			simMat[j,k] = spatial.distance.euclidean( We1[j], We2[k] )
 	
-	simMat = doDynamicPooling(simMat, 5)
+	simMat = doDynamicPooling(simMat, 7)
 	label = labels[i/2]
-
 	simMats.append((simMat, label))
 
 print len(simMats)
 print len(labels[labels == 1])
-pickle.dump(simMats,open("data/vPoolData/NsimMats" + str(15) + ".pickle",'wb'))
+pickle.dump(simMats,open("data/simMats" + str(15) + ".pickle",'wb'))
+pickle.dump(tokenized_lines,open("data/tokenized_lines"+str(15)+".pickle",'wb'))
